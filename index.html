@@ -8,16 +8,7 @@
         background-color: #d1d1d1;
         margin: 0px 0px;
         padding: 0px 0px;
-        font-family: "supria_sans";
-      }
-      @font-face {
-        font-family: "bauhausc_demi";
-        src: url("https://zapsters.github.io/Home/fonts/bauhausc_demibold_regular-webfont.woff2")
-            format("woff2"),
-          url("https://zapsters.github.io/Home/fonts/bauhausc_demibold_regular-webfont.woff")
-            format("woff");
-        font-weight: normal;
-        font-style: normal;
+        font-family: "supria_sans", "Lucida Console", "Verdana", "Arial";
       }
 
       @font-face {
@@ -26,10 +17,6 @@
           format("woff");
         font-weight: normal;
         font-style: normal;
-      }
-
-      p {
-        font-family: "supria_sans";
       }
 
       .header {
@@ -61,8 +48,8 @@
         border-color: rgba(195, 195, 195, 1);
         border-image: none;
         border-width: 0px;
-        height: 1000px;
-        width: 1000px;
+        height: 500px;
+        width: 500px;
         margin: auto;
 
         background-image:
@@ -78,7 +65,7 @@
 
       .borderbackground {
         z-index: 1;
-        padding: 140px 0px 100px 0px;
+        padding: 120px 0px 100px 0px;
         width: 100%;
         overflow: visible;
         margin: 0 auto;
@@ -118,7 +105,6 @@
 
       .selectedPixel[value="painted"] {
         opacity: 0;
-        width: 20px;
         background-color: transparent;
         outline: none;
         box-shadow: none;
@@ -137,17 +123,21 @@
 
       .debugTextClass {
         padding: 0px;
-        width: 280px;
-        margin-left: -140px;
         line-height: 1;
-        position: absolute;
         text-align: center;
-        display: inline-block;
         color: black;
-        top: -50px;
         z-index: 6;
+        
+        position: fixed;
         touch-action: none;
         pointer-events: none;
+        
+        height: 0;
+        margin: 0 0 0 10px;
+        height: 0px;
+        overflow: show;
+        display: block;
+        position: absolute;
       }
 
       .debugTextClass p {
@@ -214,11 +204,15 @@
         background-color: white;
         border: black 2px solid;
         padding: 10px 10px 10px 10px;
+        font-family: "supria_sans", "Lucida Console", "Verdana", "Arial";
+        
       }
 
       .optionBar {
         position: fixed;
-        width: 280px;
+        width: 17%;
+        max-width: 280px;
+        min-width: 200px;
         height: auto;
         top: 0px;
         right: 0px;
@@ -239,7 +233,6 @@
         padding: none;
         margin: none;
         display: block;
-        width: 70px;
         position: absolute;
         right: 0px;
         margin-right: 30px;
@@ -293,13 +286,14 @@
         z-index: 1;
         width: 90%;
         overflow: visible;
-        margin: 0 auto;
+        margin: 50px auto;
         margin-bottom: 50px;
         justify-content: center;
         align-items: center;
         text-align: center;
+        font-family: "supria_sans", "arial";
 
-        padding: 2px 0px 4px 0px;
+        padding: 1px 0px 4px 0px;
       }
 
       .snapshotContainer {
@@ -320,7 +314,7 @@
       .snapshotContainer h1 {
         color: black;
         position: absolute;
-        top: -14px;
+        font-family: "supria_sans", "arial";
       }
 
       .snapshot {
@@ -346,7 +340,7 @@
     />
   </head>
   <body>
-    <div class="optionBar" id="optionBarRight" style="z-index: 10">
+    <div class="optionBar" id="optionBarRight" style="z-index: 10;">
       <p>Hide Cursor?</p>
       <input
         class="checkbox"
@@ -376,9 +370,41 @@
         "
       >
         <p style="padding: 0px; margin: auto; text-align: center">
-          Save CanvasSnapshot
+          Save Canvas Snapshot
         </p>
       </button>
+      <!--
+      <button
+        class="buttonStyle"
+        onclick="showDebug(true);"
+        style="
+          padding: 10px 20px 10px 20px;
+          position: relative;
+          margin: auto;
+          left: 10%;
+          width: 80%;
+        "
+      >
+        <p style="padding: 0px; margin: auto; text-align: center">
+          Show Debug
+        </p>
+      </button>
+      <button
+        class="buttonStyle"
+        onclick="showDebug(false);"
+        style="
+          padding: 10px 20px 10px 20px;
+          position: relative;
+          margin: auto;
+          left: 10%;
+          width: 80%;
+        "
+      >
+        <p style="padding: 0px; margin: auto; text-align: center">
+          Hide Debug
+        </p>
+      </button>
+      -->
     </div>
 
     <!-- Unused tool bar.
@@ -439,8 +465,9 @@
               </button>
             </div>
             <p>
-              This site was made by Erin Ballinger and submitted for the CodeHS
-              2023 scholarship program.
+              Made with love by Erin Ballinger.
+              Submitted for the CodeHS 2023 scholarship program.
+              <br>Please feel free to draw something!
             </p>
           </div>
         </div>
@@ -535,15 +562,18 @@
 
       var canvasSize = [100, 100]; //Width, Height
       var pixelSize = 10;
-      border_identity.style.width = canvasSize[0] * pixelSize + "px";
-      border_identity.style.height = canvasSize[1] * pixelSize + "px";
+      var scale = .8;
+      selectedPixel.style.width = pixelSize * scale + "px";
+      selectedPixel.style.height = pixelSize * scale + "px";
+      border_identity.style.width = canvasSize[0] * pixelSize * scale + "px";
+      border_identity.style.height = canvasSize[1] * pixelSize * scale + "px";
 
-      canvas_identity.style.width = canvasSize[0] * pixelSize + "px";
-      canvas_identity.style.height = canvasSize[1] * pixelSize + "px";
+      canvas_identity.style.width = canvasSize[0] * pixelSize * scale + "px";
+      canvas_identity.style.height = canvasSize[1] * pixelSize * scale + "px";
       canvas_identity.style.backgroundSize =
         pixelSize + "px " + pixelSize + "px";
-      canvas_identity.width = canvasSize[0] * pixelSize;
-      canvas_identity.height = canvasSize[1] * pixelSize;
+      canvas_identity.width = canvasSize[0] * pixelSize * scale;
+      canvas_identity.height = canvasSize[1] * pixelSize * scale;
       canvas_object.filter = "blur(-60px)";
 
       //Tool switch function, unused until the toolBar is actually needed.
@@ -562,11 +592,9 @@
       // }
       // setActiveTool(0);
 
-      //Database pixel data
+      //Database pixel data, this initializes the canvas on load.
       var InitializedFully = false;
-      var pixelDataUpdate = firebase
-        .database()
-        .ref(databaseDirectory + "/pixels/");
+      var pixelDataUpdate = firebase.database().ref(databaseDirectory + "/pixels/");
       pixelDataUpdate.once("value", function (doc) {
         pixel_data = doc.val();
         doc.forEach((pixel) => {
@@ -575,6 +603,9 @@
           setPixelColor(pixelCords, pixelColor);
         });
         InitializedFully = true;
+        console.log(" ================================================ ");
+        console.log(" == Thanks for visiting my site! I hope you enjoy! :D == ");
+        console.log(" == Created with love by Erin == ");
       });
 
       pixelDataUpdate.on("child_added", function (doc) {
@@ -609,13 +640,15 @@
 
       //Called when database pixel is updated. Only reads the pixel that changed!!! Reads Database.
       function setPixelColor(pixelCordinates, pixelHexColor) {
+        if(pixelCordinates == undefined) return;
+        //console.log(pixelCordinates, pixelHexColor);
         canvas = canvas_identity.getContext("2d");
         canvas.beginPath();
         canvas.rect(
-          pixelCordinates[0] * pixelSize,
-          pixelCordinates[1] * pixelSize,
-          pixelSize,
-          pixelSize
+          pixelCordinates[0] * pixelSize * scale,
+          pixelCordinates[1] * pixelSize * scale,
+          pixelSize * scale,
+          pixelSize * scale
         );
         canvas.fillStyle = pixelHexColor;
         canvas.fill();
@@ -628,6 +661,10 @@
 
         folderName = canvasX + ", " + canvasY;
         canvasLocation = [canvasX, canvasY];
+        if(canvasX == undefined || canvasY == undefined) {
+            console.error("Case Caught! Tried to draw pixel, but no canvasPosition found.");
+            return;
+        }
         if (activeColorHex == canvasDefaultColor) {
           firebase
             .database()
@@ -711,8 +748,8 @@
       //User input functions
       function getCursorPosition(clientX, clientY) {
         var canvasIdentity = canvas_identity.getBoundingClientRect();
-        var cursorX = Math.floor((clientX - canvasIdentity.left) / pixelSize);
-        var cursorY = Math.floor((clientY - canvasIdentity.top) / pixelSize);
+        var cursorX = Math.floor((clientX - canvasIdentity.left) / pixelSize / scale);
+        var cursorY = Math.floor((clientY - canvasIdentity.top) / pixelSize / scale);
         return [cursorX, cursorY];
       }
 
@@ -732,8 +769,8 @@
         } else {
           cursorLeftCanvas = false;
           selectedPixel.style.opacity = 1;
-          selectedPixel.style.left = cursorX * pixelSize + "px";
-          selectedPixel.style.top = cursorY * pixelSize + "px";
+          selectedPixel.style.left = cursorX * pixelSize * scale + "px";
+          selectedPixel.style.top = cursorY * pixelSize * scale + "px";
 
           canvasX = cursorX;
           canvasY = cursorY;
