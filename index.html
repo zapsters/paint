@@ -127,11 +127,11 @@
         text-align: center;
         color: black;
         z-index: 6;
-        
+
         position: fixed;
         touch-action: none;
         pointer-events: none;
-        
+
         height: 0;
         margin: 0 0 0 10px;
         height: 0px;
@@ -205,7 +205,6 @@
         border: black 2px solid;
         padding: 10px 10px 10px 10px;
         font-family: "supria_sans", "Lucida Console", "Verdana", "Arial";
-        
       }
 
       .optionBar {
@@ -334,31 +333,27 @@
     <link
       rel="shortcut icon"
       type="image/png"
-      href="https://zapsters.github.io/home/images/ZapSIcon_C2.png"
-    />
+      href="https://zapsters.github.io/home/images/ZapSIcon_C2.png" />
     <!-- GOOGLE ICONS -->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </head>
   <body>
-    <div class="optionBar" id="optionBarRight" style="z-index: 10;">
+    <div class="optionBar" id="optionBarRight" style="z-index: 10">
       <p>Hide Cursor?</p>
       <input
         class="checkbox"
         id="cursorSOption"
         type="checkbox"
         checked="checked"
-        onclick="if(this.checked) {document.getElementById('border').style.cursor = 'none'; hideCursor = true;} else {document.getElementById('border').style.cursor = 'default';  hideCursor = false;}"
-      />
+        onclick="if(this.checked) {document.getElementById('border').style.cursor = 'none'; hideCursor = true;} else {document.getElementById('border').style.cursor = 'default';  hideCursor = false;}" />
       <p>Static Brush</p>
       <input
         class="checkbox"
         id="hOLButton"
         type="checkbox"
-        onclick="if(this.checked) {hideOnLeave = false;} else {hideOnLeave = true;}"
-      />
+        onclick="if(this.checked) {hideOnLeave = false;} else {hideOnLeave = true;}" />
 
       <br />
       <button
@@ -370,8 +365,7 @@
           margin: auto;
           left: 10%;
           width: 80%;
-        "
-      >
+        ">
         <p style="padding: 0px; margin: auto; text-align: center">
           Save Canvas Snapshot
         </p>
@@ -430,8 +424,7 @@
         text-align: left;
       "
       class="debugTextClass"
-      id="debugText"
-    >
+      id="debugText">
       <p id="colorDebug">COLORINFO</p>
       <p id="position">POS: [null]</p>
       <p id="canvasPos">canvasX/Y: [null, null]</p>
@@ -449,29 +442,25 @@
       onmousemove="onMouseMove(event)"
       onmousedown="onMouseDown(event);"
       onmouseup="onMouseUp(event);"
-      id="borderbackgroundDIV"
-    >
+      id="borderbackgroundDIV">
       <center>
         <div class="border" id="border">
           <canvas class="canvas" id="canvas"></canvas>
 
-          <div class="selectedPixel" id="selectedPixel" style="opacity: 0;"></div>
+          <div
+            class="selectedPixel"
+            id="selectedPixel"
+            style="opacity: 0"></div>
 
-          <div class="mobilePaintDiv" style="display: block">
-            <div style="display: none" id="mobilePaintDiv">
+          <div class="mobilePaintDiv" id="mobilePaintDiv" style="display: none">
+            <div style="display: block">
               <button
                 class="buttonStyle"
                 onclick="drawPixels();"
-                style="padding: 10px 20px 10px 20px"
-              >
+                style="padding: 10px 20px 10px 20px">
                 <p style="padding: 0px; margin: 0px">PAINT!</p>
               </button>
             </div>
-            <p>
-              Made with love by Erin Ballinger.
-              Submitted for the CodeHS 2023 scholarship program.
-              <br>Please feel free to draw something!
-            </p>
           </div>
         </div>
       </center>
@@ -506,7 +495,7 @@
     </script>
 
     <script>
-      var databaseDirectory = "paintProjectShowcase";
+      var databaseDirectory = "paintProject";
 
       //Objects
       var border_identity = document.getElementById("border");
@@ -565,10 +554,10 @@
 
       var canvasSize = [100, 100]; //Width, Height
       var pixelSize = 10;
-      var scale = .8;
+      var scale = 0.8;
       selectedPixel.style.width = pixelSize * scale + "px";
       selectedPixel.style.height = pixelSize * scale + "px";
-      selectedPixel.style.display = '0';
+      selectedPixel.style.display = "0";
       border_identity.style.width = canvasSize[0] * pixelSize * scale + "px";
       border_identity.style.height = canvasSize[1] * pixelSize * scale + "px";
 
@@ -598,7 +587,9 @@
 
       //Database pixel data, this initializes the canvas on load.
       var InitializedFully = false;
-      var pixelDataUpdate = firebase.database().ref(databaseDirectory + "/pixels/");
+      var pixelDataUpdate = firebase
+        .database()
+        .ref(databaseDirectory + "/pixels/");
       pixelDataUpdate.once("value", function (doc) {
         pixel_data = doc.val();
         doc.forEach((pixel) => {
@@ -608,7 +599,9 @@
         });
         InitializedFully = true;
         console.log(" ================================================ ");
-        console.log(" == Thanks for visiting my site! I hope you enjoy! :D == ");
+        console.log(
+          " == Thanks for visiting my site! I hope you enjoy! :D == "
+        );
         console.log(" == Created with love by Erin == ");
       });
 
@@ -644,7 +637,7 @@
 
       //Called when database pixel is updated. Only reads the pixel that changed!!! Reads Database.
       function setPixelColor(pixelCordinates, pixelHexColor) {
-        if(pixelCordinates == undefined) return;
+        if (pixelCordinates == undefined) return;
         //console.log(pixelCordinates, pixelHexColor);
         canvas = canvas_identity.getContext("2d");
         canvas.beginPath();
@@ -665,9 +658,11 @@
 
         folderName = canvasX + ", " + canvasY;
         canvasLocation = [canvasX, canvasY];
-        if(canvasX == undefined || canvasY == undefined) {
-            console.error("Case Caught! Tried to draw pixel, but no canvasPosition found.");
-            return;
+        if (canvasX == undefined || canvasY == undefined) {
+          console.error(
+            "Case Caught! Tried to draw pixel, but no canvasPosition found."
+          );
+          return;
         }
         if (activeColorHex == canvasDefaultColor) {
           firebase
@@ -752,8 +747,12 @@
       //User input functions
       function getCursorPosition(clientX, clientY) {
         var canvasIdentity = canvas_identity.getBoundingClientRect();
-        var cursorX = Math.floor((clientX - canvasIdentity.left) / pixelSize / scale);
-        var cursorY = Math.floor((clientY - canvasIdentity.top) / pixelSize / scale);
+        var cursorX = Math.floor(
+          (clientX - canvasIdentity.left) / pixelSize / scale
+        );
+        var cursorY = Math.floor(
+          (clientY - canvasIdentity.top) / pixelSize / scale
+        );
         return [cursorX, cursorY];
       }
 
