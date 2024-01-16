@@ -1,416 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style type="text/css">
-      body {
-        z-index: -10;
-        background-position: center;
-        background-color: #d1d1d1;
-        margin: 0px 0px;
-        padding: 0px 0px;
-        font-family: "supria_sans", "Lucida Console", "Verdana", "Arial";
-      }
-
-      @font-face {
-        font-family: supria_sans;
-        src: url("https://zapsters.github.io/home/fonts/SupriaSans-Bold.woff")
-          format("woff");
-        font-weight: normal;
-        font-style: normal;
-      }
-
-      .header {
-        position: relative;
-        background-color: rgba(73, 121, 53, 1);
-        width: 100%;
-        text-align: center;
-        padding: 20px 0;
-      }
-
-      .border {
-        position: relative;
-        z-index: 4;
-        border-style: solid;
-        border-image: none;
-        border-width: 0px;
-        height: 1000px;
-        width: 1000px;
-        overflow: visible;
-        vertical-align: middle;
-        cursor: none;
-      }
-
-      .canvas {
-        position: relative;
-        z-index: 4; /* PlayerOverlap uses z-index. */
-        background-color: rgba(255, 255, 255, 1);
-        border-style: solid;
-        border-color: rgba(195, 195, 195, 1);
-        border-image: none;
-        border-width: 0px;
-        height: 500px;
-        width: 500px;
-        margin: auto;
-
-        background-image:
-		/*repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%);
-		*/ none;
-
-        background-size: 10px 10px;
-        overflow: visible;
-
-        vertical-align: middle;
-        transform: translate(0px, 0px);
-      }
-
-      .borderbackground {
-        z-index: 1;
-        padding: 120px 0px 100px 0px;
-        width: 100%;
-        overflow: visible;
-        margin: 0 auto;
-        background-color: transparent;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .selectedPixel {
-        opacity: "0";
-        width: 10px;
-        height: 10px;
-        background-color: transparent;
-        -webkit-transition: all 0.1s ease;
-        -moz-transition: all 0.1s ease;
-        transition: all 0.1s ease;
-        color: white;
-        text-align: center;
-        display: inline-block;
-        padding: none;
-        margin: none;
-        z-index: 100;
-
-        position: absolute;
-        top: -10px;
-        left: -10px;
-
-        -webkit-transition: all 0s ease;
-        -moz-transition: all 0s ease;
-        transition: all 0s ease;
-
-        outline: solid white 2px;
-        box-shadow: 0px 0px 4px 3px rgba(0, 0, 0, 0.7);
-      }
-
-      .selectedPixel[value="painted"] {
-        opacity: "0";
-        background-color: transparent;
-        outline: none;
-        box-shadow: none;
-      }
-
-      .defaultTextClass {
-        padding: 0px;
-        width: 280px;
-        margin-left: -140px;
-        line-height: 1;
-        position: absolute;
-        text-align: center;
-        display: inline-block;
-        color: black;
-      }
-
-      .debugTextClass {
-        padding: 0px;
-        line-height: 1;
-        text-align: center;
-        color: black;
-        z-index: 6;
-
-        position: fixed;
-        touch-action: none;
-        pointer-events: none;
-
-        height: 0;
-        margin: 0 0 0 10px;
-        height: 0px;
-        overflow: show;
-        display: block;
-        position: absolute;
-      }
-
-      .debugTextClass p {
-        padding: 0px;
-        margin: 0px;
-      }
-
-      .colorContainer {
-        position: fixed;
-        width: 380px;
-        top: 0px;
-        left: 50%;
-        background-color: rgb(0, 0, 0, 0.1);
-        z-index: 10px;
-        padding: 8px 3px 5px 3px;
-
-        border-radius: 0px 0px 15px 15px;
-        transform: translate(-50%, 0%);
-
-        text-align: center;
-      }
-
-      .colorBox {
-        display: inline-block;
-        width: 40px;
-        height: 20px;
-        background-color: white;
-        margin: 0px 3px 0px 3px;
-        outline: solid rgb(0, 0, 0, 0.2) 1px;
-      }
-      .colorBox:hover {
-        outline: solid white 2px;
-        filter: drop-shadow(0 0 2px black);
-
-        margin: 0px 3px 0px 3px;
-      }
-      .colorBox[value="selected"] {
-        outline: solid white 3px;
-        filter: drop-shadow(0 0 2px black);
-
-        margin: 0px 3px 0px 3px;
-      }
-
-      .mobilePaintDiv {
-        position: absolute;
-        width: 380px;
-        bottom: 0px;
-        left: 50%;
-        background-color: rgb(0, 0, 0, 0.1);
-        z-index: 50;
-        padding: 8px;
-
-        border-radius: 0px 0px 15px 15px;
-        transform: translate(-50%, 100%);
-        cursor: default;
-      }
-      .mobilePaintDiv p {
-        padding: 0;
-        margin: 0;
-      }
-
-      .buttonStyle {
-        cursor: pointer;
-        background-color: white;
-        border: black 2px solid;
-        padding: 10px 10px 10px 10px;
-        font-family: "supria_sans", "Lucida Console", "Verdana", "Arial";
-      }
-
-      .optionBar {
-        position: fixed;
-        width: 17%;
-        max-width: 280px;
-        min-width: 200px;
-        height: auto;
-        top: 0px;
-        right: 0px;
-        background-color: rgb(0, 0, 0, 0.1);
-
-        border-radius: 0px 0px 15px 15px;
-        padding: 15px 0px 7px 15px;
-        margin: none;
-      }
-
-      .optionBar p {
-        padding: 0px;
-        margin: 0px 0px 0px 0px;
-        text-align: left;
-      }
-
-      .optionBar .checkbox {
-        padding: none;
-        margin: none;
-        display: block;
-        position: absolute;
-        right: 0px;
-        margin-right: 30px;
-        transform: translate(0, -1.4em);
-      }
-
-      .toolBar {
-        position: fixed;
-        width: 80px;
-        height: 350px;
-        top: 50%;
-        right: 0px;
-        background-color: rgb(0, 0, 0, 0.1);
-
-        border-radius: 15px 0px 0px 15px;
-        padding: 7px 0px 7px 15px;
-        margin: none;
-        transform: translate(0, -50%);
-        text-align: center;
-        padding-left: 30px;
-      }
-
-      .toolButton {
-        border-radius: 25px 25px 25px 25px;
-        display: inline-block;
-        background-color: white;
-        height: 50px;
-        width: 50px;
-        left: 50%;
-        cursor: pointer;
-        transform: translate(-12px, 30px);
-        margin-bottom: 10px;
-      }
-
-      .toolButton[value="selected"] {
-        outline: solid rgba(0, 0, 0, 0.4) 3px;
-        filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.9));
-        background-color: rgba(0, 0, 0, 0.8);
-        color: white;
-      }
-
-      .toolButton span {
-        top: 50%;
-        left: 50%;
-        transform: translate(0, 6px);
-        font-size: 36px;
-      }
-
-      .snapshotContainerMain {
-        background-color: rgba(255, 255, 255, 0.8);
-        z-index: 1;
-        width: 90%;
-        overflow: visible;
-        margin: 50px auto;
-        margin-bottom: 50px;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        font-family: "supria_sans", "arial";
-
-        padding: 1px 0px 4px 0px;
-      }
-
-      .snapshotContainer {
-        width: 450px;
-        height: 475px;
-        background-color: rgb(0, 0, 0, 0.1);
-        z-index: 10px;
-        margin: auto;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        position: relative;
-        margin: 0px 10px 40px 10px;
-        padding: 0px;
-      }
-
-      .snapshotContainer h1 {
-        color: black;
-        position: absolute;
-        margin: 0;
-        font-size: 26px;
-        top: 10px;
-        font-family: "supria_sans", "arial";
-      }
-
-      .snapshot {
-        position: absolute;
-        max-width: 400px;
-        max-height: 400px;
-        bottom: 0px;
-        background-color: white;
-        margin: 0px 3px 25px 3px;
-        outline: solid rgb(0, 0, 0, 0.2) 1px;
-      }
-    </style>
     <title>Paint!</title>
     <link rel="shortcut icon" type="image/png" href="images/PaintLogo.png" />
+    <link rel="stylesheet" href="style.css" />
     <!-- GOOGLE ICONS -->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet" />
   </head>
   <body>
-    <div class="optionBar" id="optionBarRight" style="z-index: 10">
-      <p>Hide Cursor?</p>
-      <input
-        class="checkbox"
-        id="cursorSOption"
-        type="checkbox"
-        checked="checked"
-        onclick="if(this.checked) {document.getElementById('border').style.cursor = 'none'; hideCursor = true;} else {document.getElementById('border').style.cursor = 'default';  hideCursor = false;}" />
-      <p>Static Brush</p>
-      <input
-        class="checkbox"
-        id="hOLButton"
-        type="checkbox"
-        onclick="if(this.checked) {hideOnLeave = false;} else {hideOnLeave = true;}" />
-
-      <br />
-      <button
-        class="buttonStyle"
-        onclick="uploadCanvasSnapshot(); document.getElementById('snapshotContainer').scrollIntoView();"
-        style="
-          padding: 10px 20px 10px 20px;
-          position: relative;
-          margin: auto;
-          left: 10%;
-          width: 80%;
-        ">
-        <p style="padding: 0px; margin: auto; text-align: center">
-          Save Canvas Snapshot
-        </p>
-      </button>
-      <!--
-      <button
-        class="buttonStyle"
-        onclick="showDebug(true);"
-        style="
-          padding: 10px 20px 10px 20px;
-          position: relative;
-          margin: auto;
-          left: 10%;
-          width: 80%;
-        "
-      >
-        <p style="padding: 0px; margin: auto; text-align: center">
-          Show Debug
-        </p>
-      </button>
-      <button
-        class="buttonStyle"
-        onclick="showDebug(false);"
-        style="
-          padding: 10px 20px 10px 20px;
-          position: relative;
-          margin: auto;
-          left: 10%;
-          width: 80%;
-        "
-      >
-        <p style="padding: 0px; margin: auto; text-align: center">
-          Hide Debug
-        </p>
-      </button>
-      -->
-    </div>
-
-    <!-- Unused tool bar.
-<div class="toolBar" id="optionBarRight" style="z-index: 10;">
-	<p style="position: absolute; top: -5px; left: 50%; transform: translate(-43%, 0)"><u>Tools</u></p>
-	<div class="toolButton" id="brushTool" onclick="setActiveTool(0)"><span class="material-icons">brush</span></div>
-	<div class="toolButton" id="paletteTool" onclick="setActiveTool(1)"><span class="material-icons">palette</span></div>
-</div> 
--->
-
-    <div class="colorContainer" id="colorContainer" style="z-index: 10"></div>
-
     <div
       style="
         display: none;
@@ -427,6 +26,7 @@
       <p id="canvasPos">canvasX/Y: [null, null]</p>
       <p id="painted">Painted:</p>
       <p id="isHolding">isHolding: false</p>
+      <p id="Keys">keys?</p>
       <br />
       <p id="cursorleftVar">cursorLeftCanvas: false</p>
     </div>
@@ -437,30 +37,66 @@
       ontouchstart="mobileMove(event)"
       ontouchmove="mobileMove(event)"
       onmousemove="onMouseMove(event)"
-      onmousedown="onMouseDown(event);"
-      onmouseup="onMouseUp(event);"
       id="borderbackgroundDIV">
-      <center>
-        <div class="border" id="border">
-          <canvas class="canvas" id="canvas"></canvas>
+      <div
+        class="colorContainerSide"
+        id="colorContainer"
+        style="z-index: 10"></div>
 
-          <div
-            class="selectedPixel"
-            id="selectedPixel"
-            style="opacity: 0"></div>
+      <div class="toolBar" id="optionBarRight" style="z-index: 10">
+        <p>
+          <u>Tools</u>
+        </p>
+        <div class="toolButton" id="brushTool" onclick="setActiveTool(0)">
+          <p class="material-icons">brush</p>
+        </div>
 
-          <div class="mobilePaintDiv" id="mobilePaintDiv" style="display: none">
-            <div style="display: block">
-              <button
-                class="buttonStyle"
-                onclick="drawPixels();"
-                style="padding: 10px 20px 10px 20px">
-                <p style="padding: 0px; margin: 0px">PAINT!</p>
-              </button>
-            </div>
+        <div class="toolButton" id="paletteTool" onclick="setActiveTool(1)">
+          <p class="material-icons">palette</p>
+        </div>
+      </div>
+
+      <div class="btmrightDiv" id="infoText">
+        <div class="optionBar">
+          <p>Hide Cursor?</p>
+          <input
+            class="checkbox"
+            id="cursorSOption"
+            type="checkbox"
+            checked="checked"
+            onclick="if(this.checked) {document.getElementById('border').style.cursor = 'none'; hideCursor = true;} else {document.getElementById('border').style.cursor = 'default';  hideCursor = false;}" />
+        </div>
+        <p>Hold LeftShift for eraser</p>
+        <button
+          class="buttonStyle"
+          onclick="uploadCanvasSnapshot(); document.getElementById('snapshotContainer').scrollIntoView();"
+          style="padding: 10px 20px 10px 20px; width: 100%; margin: 0 auto">
+          <p style="padding: 0px; margin: auto; text-align: center">
+            Save Canvas Snapshot
+          </p>
+        </button>
+      </div>
+
+      <div
+        class="border"
+        id="border"
+        onmousedown="onMouseDown(event);"
+        onmouseup="onMouseUp(event);">
+        <canvas class="canvas" id="canvas"></canvas>
+
+        <div class="selectedPixel" id="selectedPixel" style="opacity: 0"></div>
+
+        <div class="mobilePaintDiv" id="mobilePaintDiv" style="display: none">
+          <div style="text-align: center">
+            <button
+              class="buttonStyle"
+              onclick="drawPixels();"
+              style="padding: 9px 20px; width: 50%">
+              <p>PAINT!</p>
+            </button>
           </div>
         </div>
-      </center>
+      </div>
     </div>
 
     <div class="snapshotContainerMain" id="snapshotContainer">
@@ -490,412 +126,6 @@
       //const	db = firebase.firestore();
       var database = firebase.database();
     </script>
-
-    <script>
-      var databaseDirectory = "paintProject";
-
-      //Objects
-      var border_identity = document.getElementById("border");
-      var canvas_identity = document.getElementById("canvas");
-      var canvas_object = canvas_identity.getContext("2d");
-      var selectedPixel = document.getElementById("selectedPixel");
-
-      //Canvas / Color Data
-      var activeColorID = null;
-      var activeColorHex = null;
-      var activeColorBox = null;
-      var colorCodesArray = [
-        "6D001A",
-        "BE0039",
-        "FF4500",
-        "FFA800",
-        "FFD635",
-        "FFF8B8",
-        "00A368",
-        "00CC78",
-        "7EED56",
-        "00756F",
-        "009EAA",
-        "00CCC0",
-        "2450A4",
-        "3690EA",
-        "51E9F4",
-        "493AC1",
-        "6A5CFF",
-        "94B3FF",
-        "811E9F",
-        "B44AC0",
-        "E4ABFF",
-        "DE107F",
-        "FF3881",
-        "FF99AA",
-        "6D482F",
-        "9C6926",
-        "FFB470",
-        "000000",
-        "515252",
-        "898D90",
-        "D4D7D9",
-        "FFFFFF",
-      ];
-      var canvasDefaultColor = "#FFFFFF";
-
-      var mobileDevice = false;
-      var hideCursor = true;
-      var hideOnLeave = true;
-      var isHolding = false;
-
-      var cursorLeftCanvas = false;
-      var canvasX = null;
-      var canvasY = null;
-
-      var canvasSize = [100, 100]; //Width, Height
-      var pixelSize = 10;
-      var scale = 0.8;
-      selectedPixel.style.width = pixelSize * scale + "px";
-      selectedPixel.style.height = pixelSize * scale + "px";
-      selectedPixel.style.display = "0";
-      border_identity.style.width = canvasSize[0] * pixelSize * scale + "px";
-      border_identity.style.height = canvasSize[1] * pixelSize * scale + "px";
-
-      canvas_identity.style.width = canvasSize[0] * pixelSize * scale + "px";
-      canvas_identity.style.height = canvasSize[1] * pixelSize * scale + "px";
-      canvas_identity.style.backgroundSize =
-        pixelSize + "px " + pixelSize + "px";
-      canvas_identity.width = canvasSize[0] * pixelSize * scale;
-      canvas_identity.height = canvasSize[1] * pixelSize * scale;
-      canvas_object.filter = "blur(-60px)";
-
-      //Tool switch function, unused until the toolBar is actually needed.
-
-      // function setActiveTool(toolNumber) {
-      // 	document.getElementById("brushTool").setAttribute("value", "NOTselected");
-      // 	document.getElementById("paletteTool").setAttribute("value", "NOTselected");
-      // 	switch (toolNumber) {
-      // 		case 0:
-      // 				document.getElementById("brushTool").setAttribute("value", "selected");
-      // 			break;
-      // 		case 1:
-      // 				document.getElementById("paletteTool").setAttribute("value", "selected");
-      // 			break;
-      // 	}
-      // }
-      // setActiveTool(0);
-
-      //Database pixel data, this initializes the canvas on load.
-      var InitializedFully = false;
-      var pixelDataUpdate = firebase
-        .database()
-        .ref(databaseDirectory + "/pixels/");
-      pixelDataUpdate.once("value", function (doc) {
-        pixel_data = doc.val();
-        doc.forEach((pixel) => {
-          pixelCords = pixel.val().position;
-          pixelColor = pixel.val().color;
-          setPixelColor(pixelCords, pixelColor);
-        });
-        InitializedFully = true;
-        console.log(" ================================================ ");
-        console.log(
-          " == Thanks for visiting my site! I hope you enjoy! :D == "
-        );
-        console.log(" == Created with love by Erin == ");
-      });
-
-      pixelDataUpdate.on("child_added", function (doc) {
-        if (InitializedFully == false) return;
-        pixelUpdate(doc);
-      });
-      pixelDataUpdate.on("child_changed", function (doc) {
-        if (InitializedFully == false) return;
-        pixelUpdate(doc);
-      });
-      pixelDataUpdate.on("child_removed", function (doc) {
-        if (InitializedFully == false) return;
-        pixel_data = doc.val();
-        pixelCords = pixel_data.position;
-        pixelColor = pixel_data.color;
-        setPixelColor(pixelCords, canvasDefaultColor);
-      });
-
-      function pixelUpdate(doc) {
-        pixel_data = doc.val();
-        pixelCords = pixel_data.position;
-        pixelColor = pixel_data.color;
-        //console.log("PIXEL UPDATED: \n" + "  [" + pixelCords[0] + ", " + pixelCords[1] + "] \n  " + pixelColor);
-        folderName = pixelCords[0] + ", " + pixelCords[1];
-        setPixelColor(pixelCords, pixelColor);
-      }
-
-      function getPixelID(pixelCords) {
-        pixelID = "Pixel[" + pixelCords + "]";
-        return pixelID;
-      }
-
-      //Called when database pixel is updated. Only reads the pixel that changed!!! Reads Database.
-      function setPixelColor(pixelCordinates, pixelHexColor) {
-        if (pixelCordinates == undefined) return;
-        //console.log(pixelCordinates, pixelHexColor);
-        canvas = canvas_identity.getContext("2d");
-        canvas.beginPath();
-        canvas.rect(
-          pixelCordinates[0] * pixelSize * scale,
-          pixelCordinates[1] * pixelSize * scale,
-          pixelSize * scale,
-          pixelSize * scale
-        );
-        canvas.fillStyle = pixelHexColor;
-        canvas.fill();
-      }
-
-      //Called when user wants to paint pixel(s). Updates TO database.
-      function drawPixels() {
-        //Use the main CANVASX and CANVASY variables to paint. They are defined in updateCanvasLocation();
-        debugTextUpdate("painted", "Painted: " + canvasX + ", " + canvasY);
-
-        folderName = canvasX + ", " + canvasY;
-        canvasLocation = [canvasX, canvasY];
-        if (canvasX == undefined || canvasY == undefined) {
-          console.error(
-            "Case Caught! Tried to draw pixel, but no canvasPosition found."
-          );
-          return;
-        }
-        if (activeColorHex == canvasDefaultColor) {
-          firebase
-            .database()
-            .ref(databaseDirectory + "/pixels/" + folderName)
-            .set({});
-        } else {
-          firebase
-            .database()
-            .ref(databaseDirectory + "/pixels/" + folderName)
-            .set({
-              color: activeColorHex,
-              position: canvasLocation,
-            });
-        }
-      }
-
-      //Database Canvas Snapshot Saving & Reading!
-      function uploadCanvasSnapshot() {
-        var newSnapshot = canvas_identity.toDataURL();
-        var date = new Date();
-        var dd = String(date.getDate()).padStart(2, "0");
-        var mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
-        var yyyy = date.getFullYear();
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? "pm" : "am";
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        if (minutes < 10) minutes = "0" + minutes;
-        title =
-          mm +
-          "/" +
-          dd +
-          "/" +
-          yyyy +
-          " - " +
-          hours +
-          ":" +
-          minutes.toString() +
-          " " +
-          ampm;
-        firebase
-          .database()
-          .ref(databaseDirectory + "/snapshots/" + date.getTime())
-          .set({
-            title: title,
-            snapshot: newSnapshot,
-          });
-        return newSnapshot;
-      }
-
-      var snapshotDataUpdate = firebase
-        .database()
-        .ref(databaseDirectory + "/snapshots/");
-      snapshotDataUpdate.on("child_added", function (doc) {
-        snapshotData = doc.val();
-
-        var snapshotConDIV = document.getElementById("snapshotContainer");
-
-        var newSnapshotContainer = document.createElement("div");
-        newSnapshotContainer.setAttribute("class", "snapshotContainer");
-        var newSnapshot = document.createElement("img");
-        newSnapshot.setAttribute("class", "snapshot");
-        newSnapshot.setAttribute("src", snapshotData.snapshot);
-        var newtext = document.createElement("h1");
-        newtext.innerHTML = snapshotData.title;
-        newSnapshotContainer.appendChild(newtext);
-        newSnapshotContainer.appendChild(newSnapshot);
-        document
-          .getElementById("snapshotContainer")
-          .appendChild(newSnapshotContainer);
-        if (snapshotConDIV.children[1]) {
-          //console.log(snapshotConDIV.children[1]);
-          snapshotConDIV.insertBefore(
-            newSnapshotContainer,
-            snapshotConDIV.children[1]
-          );
-        }
-      });
-
-      //User input functions
-      function getCursorPosition(clientX, clientY) {
-        var canvasIdentity = canvas_identity.getBoundingClientRect();
-        var cursorX = Math.floor(
-          (clientX - canvasIdentity.left) / pixelSize / scale
-        );
-        var cursorY = Math.floor(
-          (clientY - canvasIdentity.top) / pixelSize / scale
-        );
-        return [cursorX, cursorY];
-      }
-
-      function updateCanvasLocation(cursorX, cursorY) {
-        if (cursorX == canvasX && cursorY == canvasY) return;
-        if (
-          cursorX < 0 ||
-          cursorY < 0 ||
-          cursorX >= canvasSize[0] ||
-          cursorY >= canvasSize[1]
-        ) {
-          //Cursor has left the painting zone, hide the selectedPixel.
-          if (hideOnLeave) selectedPixel.style.opacity = "0";
-          if (mobileDevice == false) {
-            cursorLeftCanvas = true;
-          }
-        } else {
-          cursorLeftCanvas = false;
-          selectedPixel.style.opacity = "1";
-          selectedPixel.style.left = cursorX * pixelSize * scale + "px";
-          selectedPixel.style.top = cursorY * pixelSize * scale + "px";
-
-          canvasX = cursorX;
-          canvasY = cursorY;
-        }
-        debugTextUpdate(
-          "cursorleftVar",
-          "cursorLeftCanvas: " + cursorLeftCanvas
-        );
-        debugTextUpdate(
-          "canvasPos",
-          "canvasX/Y: [" + canvasX + ", " + canvasY + "]"
-        );
-      }
-
-      function onMouseDown(e) {
-        if (mobileDevice == true) {
-          return;
-        } //Mobile users use the "PAINT" button instead of just clicking.
-        if (cursorLeftCanvas == true) return; //If cursor is not in the canvas
-        isHolding = true;
-        debugTextUpdate("isHolding", "isHolding: " + isHolding);
-        drawPixels();
-      }
-
-      function onMouseUp(e) {
-        isHolding = false;
-        debugTextUpdate("isHolding", "isHolding: " + isHolding);
-      }
-
-      function onMouseMove(e) {
-        var [cursorX, cursorY] = getCursorPosition(e.clientX, e.clientY);
-        if (cursorX == canvasX && cursorY == canvasY) return; //if cursor hasn't gone to a new pixel, return
-        var position = "[" + cursorX + "," + cursorY + "]";
-        debugTextUpdate("position", "POS: " + position);
-        updateCanvasLocation(cursorX, cursorY);
-        if (isHolding) {
-          drawPixels();
-        }
-      }
-
-      function mobileMove(e) {
-        var [cursorX, cursorY] = getCursorPosition(
-          e.touches[0].clientX,
-          e.touches[0].clientY
-        );
-        var position = "[" + cursorX + "," + cursorY + "]";
-        debugTextUpdate("position", "POS: " + position);
-        updateCanvasLocation(cursorX, cursorY);
-
-        //make the PAINT button visible for mobile users.
-        if (mobileDevice == false) {
-          mobileDevice = true;
-          mobilePaintDiv.style.display = "block";
-          hideOnLeave = false; //Leaves SelectedPixel visible even if the user clicks outside of canvas.
-          hOLButton.checked = false;
-        }
-      }
-
-      //Website initialize Function to create color options.
-      function createColorOptions() {
-        for (let i = 0; i < colorCodesArray.length; i++) {
-          var colorHTMLID = "color-" + i;
-          var colorhex = colorCodesArray[i];
-          var newColorDiv = document.createElement("div");
-
-          newColorDiv.setAttribute("class", "colorBox ");
-          newColorDiv.style.background = "#" + colorhex;
-          newColorDiv.setAttribute("id", colorHTMLID); //Set HTML id.
-          newColorDiv.setAttribute("colorid", i); //Set colorid variable to keep track of active color #.
-          newColorDiv.setAttribute("colorhex", colorhex); //Save color hex code to box.
-          newColorDiv.setAttribute("value", "NOTselected"); //Make sure it does not have the selected CSS value for styling.
-          document.getElementById("colorContainer").appendChild(newColorDiv);
-
-          newColorDiv.addEventListener("click", function () {
-            selectNewColor(this, this.getAttribute("colorid"));
-          });
-        }
-      }
-
-      createColorOptions();
-
-      //Called when clicking on a colorBox in the colorContainer. Sets active colorBox and active colorID (ID is to be used in the database for coloring)
-      function selectNewColor(colorBox, colorID) {
-        if (activeColorBox != null) {
-          activeColorBox.setAttribute("value", "NOTselected");
-          activeColorBox == null;
-        }
-        colorBox.setAttribute("value", "selected");
-        var colorHEX = colorBox.getAttribute("colorhex");
-
-        activeColorBox = colorBox;
-        activeColorID = colorID;
-        activeColorHex = "#" + colorHEX;
-
-        debugTextUpdate(
-          "colorDebug",
-          activeColorHex + " [" + activeColorID + "]"
-        );
-
-        //Update the cursor's color.
-        selectedPixel.style.backgroundColor = activeColorHex;
-      }
-      selectNewColor(document.getElementById("color-27"), 31);
-
-      function debugTextUpdate(child, value) {
-        if (typeof value === "object") {
-          value = JSON.stringify(data);
-        }
-        document.getElementById("debugText").children[child].innerHTML =
-          value.toString();
-      }
-
-      //Onblur remove pressed keys. Prevents character getting stuck in a certain direction.
-      window.onblur = function () {
-        isHolding = false;
-        debugTextUpdate("isHolding", "isHolding: " + isHolding);
-      };
-
-      function showDebug(state) {
-        if (state) {
-          debugText.style.display = "block";
-        } else {
-          debugText.style.display = "none";
-        }
-      }
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>

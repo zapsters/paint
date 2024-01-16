@@ -1,0 +1,369 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-bottom: 16px;
+}
+
+/* End of Reset */
+
+body {
+  z-index: -10;
+  background-position: center;
+  background-color: #d1d1d1;
+  margin: 0px 0px;
+  padding: 0px 0px;
+  font-family: "supria_sans", "Lucida Console", "Verdana", "Arial";
+}
+
+@font-face {
+  font-family: supria_sans;
+  src: url("https://zapsters.github.io/home/fonts/SupriaSans-Bold.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.header {
+  position: relative;
+  background-color: rgba(73, 121, 53, 1);
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.border {
+  position: relative;
+  z-index: 4;
+  border-style: solid;
+  border-image: none;
+  border-width: 0px;
+  height: 800px;
+  width: 800px;
+  overflow: visible;
+  vertical-align: middle;
+  cursor: none;
+
+  background-color: red;
+}
+
+.canvas {
+  position: relative;
+  z-index: 4; /* PlayerOverlap uses z-index. */
+  background-color: rgba(255, 255, 255, 1);
+  border-style: solid;
+  border-color: rgba(195, 195, 195, 1);
+  border-image: none;
+  border-width: 0px;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+
+  vertical-align: middle;
+  transform: translate(0px, 0px);
+}
+
+.borderbackground {
+  z-index: 1;
+  padding: 120px 0px 100px 0px;
+  width: 100%;
+  overflow: visible;
+  margin: 0 auto;
+  background-color: transparent;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%;
+}
+
+.selectedPixel {
+  opacity: "0";
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  padding: none;
+  margin: none;
+  z-index: 100;
+
+  position: absolute;
+  top: -10px;
+  left: -10px;
+
+  -webkit-transition: all 0s ease;
+  -moz-transition: all 0s ease;
+  transition: all 0s ease;
+
+  outline: solid white 2px;
+  box-shadow: 0px 0px 4px 3px rgba(0, 0, 0, 0.7);
+}
+
+.selectedPixel[value="painted"] {
+  opacity: "0";
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+.defaultTextClass {
+  padding: 0px;
+  width: 280px;
+  margin-left: -140px;
+  line-height: 1;
+  position: absolute;
+  text-align: center;
+  display: inline-block;
+  color: black;
+}
+
+.debugTextClass {
+  padding: 0px;
+  line-height: 1;
+  text-align: center;
+  color: black;
+  z-index: 6;
+
+  position: fixed;
+  touch-action: none;
+  pointer-events: none;
+
+  height: 0;
+  margin: 0 0 0 10px;
+  height: 0px;
+  overflow: show;
+  display: block;
+  position: absolute;
+}
+
+.debugTextClass p {
+  padding: 0px;
+  margin: 0px;
+}
+
+.colorContainer {
+  position: fixed;
+  width: 380px;
+  top: 0px;
+  left: 50%;
+  background-color: rgb(0, 0, 0, 0.1);
+  z-index: 10px;
+  padding: 8px 3px 5px 3px;
+
+  border-radius: 0px 0px 15px 15px;
+  transform: translate(-50%, 0%);
+
+  text-align: center;
+}
+.colorContainerSide {
+  position: absolute;
+  max-width: 192px;
+  top: 50%;
+  left: 0;
+  background-color: rgb(0, 0, 0, 0.1);
+  z-index: 10px;
+
+  padding: 10px 8px;
+  border-radius: 0px 10px 10px 0px;
+  transform: translate(0%, -50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  gap: 5px;
+  row-gap: 5px;
+}
+
+.colorBox {
+  display: inline-block;
+  width: 40px;
+  height: 35px;
+  background-color: white;
+  outline: solid rgb(0, 0, 0, 0.2) 1px;
+}
+.colorBox:hover {
+  outline: solid white 2px;
+  filter: drop-shadow(0 0 2px black);
+}
+.colorBox[value="selected"] {
+  outline: solid white 3px;
+  filter: drop-shadow(0 0 2px black);
+}
+
+.mobilePaintDiv {
+  position: absolute;
+  width: 320px;
+  bottom: 0px;
+  left: 50%;
+  background-color: rgb(0, 0, 0, 0.1);
+  z-index: 50;
+  padding: 5px 0;
+
+  border-radius: 0px 0px 15px 15px;
+  transform: translate(-50%, 100%);
+}
+
+.buttonStyle {
+  cursor: pointer;
+  background-color: white;
+  border: black 2px solid;
+  padding: 10px 10px 10px 10px;
+  font-family: "supria_sans", "Lucida Console", "Verdana", "Arial";
+}
+.buttonStyle p {
+  padding: 0;
+  margin: 0;
+}
+
+.optionBar {
+  display: flex;
+  justify-content: space-between;
+}
+.checkbox {
+  cursor: pointer;
+}
+
+.toolBar {
+  position: absolute;
+  width: 80px;
+  height: 350px;
+  top: 50%;
+  right: 0px;
+  background-color: rgb(0, 0, 0, 0.1);
+
+  border-radius: 15px 0px 0px 15px;
+  margin: none;
+  transform: translate(0, -50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 6px 0;
+  gap: 10px;
+}
+.toolBar p {
+  margin: 0;
+  padding: 0;
+}
+
+.toolButton {
+  border-radius: 50%;
+  background-color: white;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  padding: 0px;
+  position: relative;
+
+  cursor: pointer;
+}
+
+.toolButton p {
+  font-size: 35px;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.toolButton[value="selected"] {
+  outline: solid rgba(0, 0, 0, 0.4) 3px;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.9));
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+}
+
+.toolButton span {
+  top: 50%;
+  left: 50%;
+  transform: translate(0, 6px);
+  font-size: 36px;
+}
+
+.snapshotContainerMain {
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  width: 90%;
+  overflow: visible;
+  margin: 50px auto;
+  margin-bottom: 50px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "supria_sans", "arial";
+
+  padding: 1px 0px 4px 0px;
+}
+
+.snapshotContainer {
+  width: 450px;
+  height: 475px;
+  background-color: rgb(0, 0, 0, 0.1);
+  z-index: 10px;
+  margin: auto;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  margin: 0px 10px 40px 10px;
+  padding: 0px;
+}
+
+.snapshotContainer h1 {
+  color: black;
+  position: absolute;
+  margin: 0;
+  font-size: 26px;
+  top: 10px;
+  font-family: "supria_sans", "arial";
+}
+
+.snapshot {
+  position: absolute;
+  max-width: 400px;
+  max-height: 400px;
+  bottom: 0px;
+  background-color: white;
+  margin: 0px 3px 25px 3px;
+  outline: solid rgb(0, 0, 0, 0.2) 1px;
+}
+
+.btmrightDiv {
+  display: block;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  cursor: default;
+  text-align: left;
+  z-index: 14;
+}
+
+.btmrightDiv p {
+  padding: 0;
+  margin: 0;
+}
