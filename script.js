@@ -58,7 +58,7 @@ var canvasY = null;
 
 var canvasSize = [100, 100]; //Width, Height
 var pixelSize = 10;
-var scale = 0.8;
+var scale = 0.7;
 selectedPixel.style.width = pixelSize * scale + "px";
 selectedPixel.style.height = pixelSize * scale + "px";
 

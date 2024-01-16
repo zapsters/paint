@@ -39,6 +39,27 @@
       onmousemove="onMouseMove(event)"
       id="borderbackgroundDIV">
       <div
+        class="border"
+        id="border"
+        onmousedown="onMouseDown(event);"
+        onmouseup="onMouseUp(event);">
+        <canvas class="canvas" id="canvas"></canvas>
+
+        <div class="selectedPixel" id="selectedPixel" style="opacity: 0"></div>
+
+        <div class="mobilePaintDiv" id="mobilePaintDiv" style="display: none">
+          <div style="text-align: center">
+            <button
+              class="buttonStyle"
+              onclick="drawPixels();"
+              style="padding: 9px 20px; width: 50%">
+              <p>PAINT!</p>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
         class="colorContainerSide"
         id="colorContainer"
         style="z-index: 10"></div>
@@ -75,27 +96,6 @@
             Save Canvas Snapshot
           </p>
         </button>
-      </div>
-
-      <div
-        class="border"
-        id="border"
-        onmousedown="onMouseDown(event);"
-        onmouseup="onMouseUp(event);">
-        <canvas class="canvas" id="canvas"></canvas>
-
-        <div class="selectedPixel" id="selectedPixel" style="opacity: 0"></div>
-
-        <div class="mobilePaintDiv" id="mobilePaintDiv" style="display: none">
-          <div style="text-align: center">
-            <button
-              class="buttonStyle"
-              onclick="drawPixels();"
-              style="padding: 9px 20px; width: 50%">
-              <p>PAINT!</p>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
 

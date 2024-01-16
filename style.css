@@ -78,7 +78,7 @@ body {
 
 .borderbackground {
   z-index: 1;
-  padding: 120px 0px 100px 0px;
+  padding: 0px 0px 0px 0px;
   width: 100%;
   overflow: visible;
   margin: 0 auto;
